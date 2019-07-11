@@ -16,17 +16,24 @@
 
 <body class="elo">
     <header id = "myHeader">
-        <h1><a class = "header" href = "../index.html">photos by saheed</a></h1>
+        <h1><a class = "header" href = "saheedphoto.com">photos by saheed</a></h1>
     </header>
    <br><br><br><br><br><br><br>
     <main>
-        <h1>experimental</h1>
+        <h1>city & street</h1>
         <div class="hes-gallery">
-		<img src="img/experimental/convention.jpg" data-subtext="convention">
-		<img src="img/experimental/kitchen_view.jpg" data-subtext="kitchen view">
-		<img src="img/experimental/plinko.jpg" data-subtext="plinko">
-		<img src="img/experimental/sky_convention.jpg" data-subtext="sky convention">
-		<img src="img/experimental/stairing.jpg" data-subtext="stairing">
+		<img src="img/city_street/bear_mountain.jpg" data-subtext="bear mountain">
+		<img src="img/city_street/boa.jpg" data-subtext="boa">
+		<img src="img/city_street/cn_tower.jpg" data-subtext="cn tower">
+		<img src="img/city_street/east_river.jpg" data-subtext="east river">
+		<img src="img/city_street/east_river_skyline.jpg" data-subtext="east river skyline">
+		<img src="img/city_street/foggy_city.jpg" data-subtext="foggy city">
+		<img src="img/city_street/gaslamp.jpg" data-subtext="gaslamp">
+		<img src="img/city_street/hudson.jpg" data-subtext="hudson">
+		<img src="img/city_street/ocean_beach.jpg" data-subtext="ocean beach">
+		<img src="img/city_street/power_lines.jpg" data-subtext="power lines">
+		<img src="img/city_street/riverdale_station.jpg" data-subtext="riverdale station">
+		<img src="img/city_street/sunburst_swing.jpg" data-subtext="sunburst swing">
         </div>
 		
 		<br><br><br><br>

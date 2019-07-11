@@ -16,17 +16,17 @@
 
 <body class="elo">
     <header id = "myHeader">
-        <h1><a class = "header" href = "../index.html">photos by saheed</a></h1>
+        <h1><a class = "header" href = "saheedphoto.com">photos by saheed</a></h1>
     </header>
    <br><br><br><br><br><br><br>
     <main>
-        <h1>portraits</h1>
+        <h1>experimental</h1>
         <div class="hes-gallery">
-		<img src="img/portraits/bather.jpg" data-subtext="bather">
-		<img src="img/portraits/dreamer.jpg" data-subtext="dreamer">
-		<img src="img/portraits/drifter.jpg" data-subtext="drifter">
-		<img src="img/portraits/gazer.jpg" data-subtext="gazer">
-		<img src="img/portraits/looker.jpg" data-subtext="looker">
+		<img src="img/experimental/convention.jpg" data-subtext="convention">
+		<img src="img/experimental/kitchen_view.jpg" data-subtext="kitchen view">
+		<img src="img/experimental/plinko.jpg" data-subtext="plinko">
+		<img src="img/experimental/sky_convention.jpg" data-subtext="sky convention">
+		<img src="img/experimental/stairing.jpg" data-subtext="stairing">
         </div>
 		
 		<br><br><br><br>

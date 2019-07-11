@@ -16,25 +16,17 @@
 
 <body class="elo">
     <header id = "myHeader">
-        <h1><a class = "header" href = "../index.html">&nbsp; photos by saheed</a></h1>
+        <h1><a class = "header" href = "saheedphoto.com">photos by saheed</a></h1>
     </header>
    <br><br><br><br><br><br><br>
     <main>
-        <h1>plants & animals</h1>
+        <h1>portraits</h1>
         <div class="hes-gallery">
-		<img src="img/plants_animals/banana_cultivar.jpg" data-subtext="banana cultivar">
-            <img src="img/plants_animals/coffea_arabica.jpg" data-subtext="coffea arabica">
-            <img src="img/plants_animals/gorillas.jpg" data-subtext="gorillas">
-            <img src="img/plants_animals/heliconia_mariae.jpg" data-subtext="heliconia mariae" >
-			<img src="img/plants_animals/jellyfish.jpg" data-subtext="jellyfish">
-			<img src="img/plants_animals/justicia_aurea.jpg" data-subtext="justicia_aurea">
-			<img src="img/plants_animals/king_vulture.jpg" data-subtext="king vulture">
-			<img src="img/plants_animals/medinilla_cummingii.jpg" data-subtext="medinilla cummingii">
-			<img src="img/plants_animals/pinanga_kuhlii.jpg" data-subtext="pinanga kuhlii">
-			<img src="img/plants_animals/polar_bear.jpg" data-subtext="polar bear">
-			<img src="img/plants_animals/red_panda.jpg" data-subtext="red panda">
-			<img src="img/plants_animals/withering_flower.jpg" data-subtext="withering flower">
-			<img src="img/plants_animals/zingiber_spectabile.jpg" data-subtext="zingiber spectabile">
+		<img src="img/portraits/bather.jpg" data-subtext="bather">
+		<img src="img/portraits/dreamer.jpg" data-subtext="dreamer">
+		<img src="img/portraits/drifter.jpg" data-subtext="drifter">
+		<img src="img/portraits/gazer.jpg" data-subtext="gazer">
+		<img src="img/portraits/looker.jpg" data-subtext="looker">
         </div>
 		
 		<br><br><br><br>
