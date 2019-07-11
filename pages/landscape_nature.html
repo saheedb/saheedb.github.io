@@ -1,0 +1,59 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>saheedphoto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../src/hes-gallery.css">
+	<link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicons/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicons/apple-touch-icon-precomposed.png">
+</head>
+
+<body class="elo">
+    <header id = "myHeader">
+        <h1><a class = "header" href = "../index.html">photos by saheed</a></h1>
+    </header>
+   <br><br><br><br><br><br><br>
+    <main>
+        <h1>landscape & nature</h1>
+        <div class="hes-gallery">
+		<img src="img/landscape_nature/akaka_falls.jpg" data-subtext="akaka falls">
+		<img src="img/landscape_nature/avalanche_falls.jpg" data-subtext="avalanche falls">
+		<img src="img/landscape_nature/cloudland_falls.jpg" data-subtext="cloudland falls">
+		<img src="img/landscape_nature/honaunau.jpg" data-subtext="honaunau">
+		<img src="img/landscape_nature/onomea_falls.jpg" data-subtext="onomea falls">
+		<img src="img/landscape_nature/umauma_falls.jpg" data-subtext="umauma falls">
+		<img src="img/landscape_nature/waipi'o.jpg" data-subtext="waipi'o">
+		<img src="img/landscape_nature/waipi'o_iv.jpg" data-subtext="waipi'o iv">
+		<img src="img/landscape_nature/white_mountains.jpg" data-subtext="white mountains">
+		<img src="img/landscape_nature/whittington.jpg" data-subtext="whittington">
+        </div>
+		
+		<br><br><br><br>
+	<small>
+	<p align = "right">saheed.photography@gmail.com</p>
+	<p align = "right">Copyright © 2019. All Rights Reserved</p>
+	</small>
+    </main>
+
+    <!-- <script src="../src/hes-gallery.js"></script> -->
+    <script src="../dist/hes-gallery.js"></script>
+    <script>
+
+        HesGallery.setOptions({
+            disableScrolling: false,
+            hostedStyles: false,
+            animations: true,
+
+            showImageCount: true,
+            wrapAround: true
+        });
+
+    </script>
+</body>
+</html>
