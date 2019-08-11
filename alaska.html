@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>saheedphoto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <link rel="stylesheet" href="pages/style.css">
+    <link rel="stylesheet" href="src/hes-gallery.css">
+	<link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicons/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicons/apple-touch-icon-precomposed.png">
+</head>
+
+<body class="elo">
+    <header id = "myHeader">
+        <h1><a class = "header" href = "https://saheedphoto.com/">photos by saheed</a></h1>
+    </header>
+   <br><br><br><br><br><br>
+    <main>
+        <h3>alaska</h3>
+        <div class="hes-gallery">
+		<img src="pages/img/landscape_nature/beluga_point.JPG" data-subtext="beluga point">
+		<img src="pages/img/landscape_nature/eagle_river.JPG" data-subtext="eagle river">
+		<img src="pages/img/landscape_nature/turnagain.JPG" data-subtext="turnagain">
+		<img src="pages/img/landscape_nature/turnagain_2.JPG" data-subtext="turnagain 2">
+		<img src="pages/img/landscape_nature/harriman_fjord.JPG" data-subtext="harriman fjord">
+		<img src="pages/img/landscape_nature/surprise_glacier.JPG" data-subtext="surprise glacier">
+		<img src="pages/img/landscape_nature/surprise_glacier_2.JPG" data-subtext="surprise glacier 2">
+		<img src="pages/img/landscape_nature/serpentine_glacier.JPG" data-subtext="serpentine glacier">
+		<img src="pages/img/landscape_nature/harriman_glacier.JPG" data-subtext="harriman glacier">
+		<img src="pages/img/landscape_nature/portage_lake.JPG" data-subtext="portage lake">
+		<img src="pages/img/landscape_nature/virgin_creek_falls.JPG" data-subtext="virgin creek falls">
+		<img src="pages/img/landscape_nature/anchorage.JPG" data-subtext="anchorage">
+        </div>
+		
+		<br><br><br><br>
+	<small>
+	<p align = "right">saheed.photography@gmail.com</p>
+	<p align = "right">All Rights Reserved</p>
+	</small>
+    </main>
+
+    <!-- <script src="src/hes-gallery.js"></script> -->
+    <script src="dist/hes-gallery.js"></script>
+    <script>
+
+        HesGallery.setOptions({
+            disableScrolling: false,
+            hostedStyles: false,
+            animations: true,
+
+            showImageCount: true,
+            wrapAround: true
+        });
+
+    </script>
+</body>
+</html>
