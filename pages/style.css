@@ -115,7 +115,7 @@ p {
 
 a:link, a:visited {
   background-color: ;
-  color: black;
+  color: white;
   padding: 10px 25px;
   text-align: center;
   text-decoration: none;
@@ -123,8 +123,8 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
 }
 a.header:hover {
 	color: #fff;
