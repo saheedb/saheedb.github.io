@@ -39,8 +39,8 @@ step_fn <- function(s_0) {
     for(rw in 2:(nrow(s_0)-1)) {
       ## get the value for each of the eight neighbors
       ## around every point
-      tl <- s_0[rw-1, cl-1]; t  <- s_0[rw-1, cl]; 
-      tr <- s_0[rw-1, cl+1]; l  <- s_0[rw, cl-1]; 
+      tl <- s_0[rw-1, cl-1]; t  <- s_0[rw-1, cl] 
+      tr <- s_0[rw-1, cl+1]; l  <- s_0[rw, cl-1] 
       r  <- s_0[rw, cl+1]; bl <- s_0[rw+1, cl-1]
       b  <- s_0[rw+1, cl]; br <- s_0[rw+1, cl+1]
       ## calculate how many neighbords are live
