@@ -103,7 +103,7 @@ for(mat in seq(1, length(tbls))) {
 ```
 
 #### Assemble images into a video  
-I used ImageMagick (https://imagemagick.org/index.php), but many tools can be used to do this.  
+I used ImageMagick (https://imagemagick.org/index.php), but many tools can be used to do this.  2000 iterations were calculated and compressed to about 13 frames (iterations) per second: 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xKoEEkFOTRA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
