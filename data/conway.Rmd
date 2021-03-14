@@ -1,0 +1,109 @@
+---
+title: "Conway's Game of Life in R"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	fig.align = "center",
+	fig.height = 4,
+	fig.width = 6,
+	message = FALSE,
+	warning = FALSE,
+	echo    = FALSE
+)
+options(width = 300)
+```
+
+#### A newbie-friendly R implementation of Conway's Game of Life:  
+https://en.wikipedia.org/wiki/Conway's_Game_of_Life    
+  
+  
+`pheatmap` is pretty intuitive and easy to use, but any plotting tool can be used to create the plots
+
+```{r}
+library(pheatmap)
+```
+
+#### Define the main function which will permute each iteration:  
+
+```{r}
+## s_0 is a symmetrical matrix (initial state)
+step_fn <- function(s_0) {
+  ## create a duplicate matrix for the permuted state (s_1)
+  s_1 <- s_0
+  ## don't include border cells because it will look nicer
+  ## iterate columns
+  for(cl in 2:(ncol(s_0)-1)) {
+    ## iterate rows
+    for(rw in 2:(nrow(s_0)-1)) {
+      ## get the value for each of the eight neighbors
+      ## around every point
+      tl <- s_0[rw-1, cl-1]; t  <- s_0[rw-1, cl]; 
+      tr <- s_0[rw-1, cl+1]; l  <- s_0[rw, cl-1]; 
+      r  <- s_0[rw, cl+1]; bl <- s_0[rw+1, cl-1]
+      b  <- s_0[rw+1, cl]; br <- s_0[rw+1, cl+1]
+      ## calculate how many neighbords are live
+      n <- sum(c(tl, t, tr, l, r, bl, b, br) > 0)
+      ## permute based on Conway's three rules
+      if (s_0[rw, cl] == 1) {
+        if (n %in% c(2, 3)) {
+        } else {
+          s_1[rw, cl] <- 0
+        }
+      } else if (s_0[rw, cl] == 0) {
+        if (n == 3) {
+          s_1[rw, cl] <- 1
+        }
+      }
+    }
+  }
+  ## return the permuted matrix
+  return(s_1)
+}
+
+```
+
+#### Play the game
+
+```{r}
+## set the grid size (256 x 256 in this case)
+ngrid <- 256
+## number of iterations
+steps <- 2000
+## create an empty list to store the original state and the permuted states
+tbls <- vector(mode = "list", length = steps)
+## generate the initial state based on a binomial distribution
+## where each cell has a 50% chance of being alive
+tbls[[1]] <- matrix(rbinom(ngrid^2, 1, 0.5), ncol = ngrid)
+## make the border cells a uniform color (just a cosmetic tweak)
+tbls[[1]][1, ] <- rep(0, ngrid); tbls[[1]][, 1] <- rep(0, ngrid)
+tbls[[1]][ngrid, ] <- rep(0, ngrid); tbls[[1]][, ngrid] <- rep(0, ngrid)
+## iterate the list, applying the permutation function to each item
+## and store the permuted matrix at the end of the list
+for (step in 1:length(tbls)){ 
+  s_0 <- tbls[[step]]
+  tbls[[step + 1]] <- step_fn(s_0)
+}
+```
+
+#### Save the images
+
+```{r}
+## iterate the permuted list and call the png() device to save
+## the heatmap images to file
+for(mat in seq(1, length(tbls))) {
+  png(filename = paste0("conway/", mat, ".png"),
+      width = 1500, height = 1500, units = "px", 
+      pointsize = 12, bg = "white", res = 120)
+  pheatmap(tbls[[mat]], cluster_rows = FALSE, cluster_cols = FALSE,
+             legend = FALSE, color = c("white", "black"))
+  dev.off()
+}
+```
+
+#### Assemble images into a video  
+I used ImageMagick (https://imagemagick.org/index.php), but many tools can be used to do this.  
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xKoEEkFOTRA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+

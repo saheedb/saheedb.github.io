@@ -1,0 +1,611 @@
+---
+title: "Star Trek script analysis"
+output: html_notebook
+---
+
+Criticisms of Discovery aside, here's an objective (imo) look at the raw scripts. This analysis covers all canon Trek series from TOS to DIS (S1 only.) Non-Discovery data is available on Kaggle: https://www.kaggle.com/gjbroughton/start-trek-scripts which is originally sourced from chakoteya.net. Discovery scripts were also pulled from chakoteya.net but currently only season 1 is available.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(jsonlite)
+library(rvest)
+library(koRpus)
+library(koRpus.lang.en)
+```
+
+First, the non-Discovery series imported from the Kaggle dataset
+```{r message=FALSE, warning=FALSE}
+### import scripts
+st_lines <- read_json("X:\\Documents\\trek_scripts\\all_series_lines.json")
+
+### initialise some vectors ###
+
+# to count the number of words in each episode
+st_n_words <- c()
+# to store the episode number
+st_names <- c()
+# to store the length of each word in an episode
+st_word_length <- list()
+```
+
+The json file is very well organized
+```{r}
+## st_lines[["series"]][[episode number]]
+st_lines[["TNG"]][[2]] %>% unlist(use.names = FALSE) %>% head()
+```
+
+
+Iterate over each episode to clean up and pull the information mentioned above
+```{r message=FALSE, warning=FALSE}
+for(series in seq(1, length(st_lines))) {
+  for (episode in seq(1, length(st_lines[[series]]))) {
+    ## get the unique words in each episode
+    words <- 
+      st_lines[[series]][[episode]] %>% 
+      unlist(use.names = FALSE) %>%
+      ## somewhat crude clean-up to remove punctuation
+      lapply(function(x) {
+        gsub("\\.|,|!|\\?", "", x)
+      }) %>% lapply(str_split, " ") %>%
+      unlist()
+    unique_words <- words %>% unique()
+    ## get the season and episode number
+    st_names[length(st_names) + 1] <- 
+      paste0(names(st_lines[series]), "_", 
+             names(st_lines[[series]][episode]))
+    ## count the number of unique words per episode
+    st_n_words[length(st_n_words) + 1] <- 
+      unique_words %>% length()
+    ## get the length of each (unique) word
+    st_word_length[[length(st_word_length) + 1]] <- 
+      unique_words %>% lapply(nchar) %>% unlist()
+  }
+}
+```
+
+Put the three vectors together and make a neat table
+```{r message=FALSE, warning=FALSE}
+st_words <- tibble("episode"      = st_names,
+                   "unique_words" = st_n_words,
+                   "word_lengths" = st_word_length)
+head(st_words)
+dim(st_words)
+```
+
+Now the same for Discovery episodes pulled manually (from a URL table created with import.io)
+```{r message=FALSE, warning=FALSE}
+std <- read_csv("X:\\Documents\\trek_scripts\\std.csv")
+head(std)
+
+std_n_words <- c()
+std_names <- c()
+std_word_length <- list()
+```
+The Discovery scripts are not as clean as those from the json file and will require a bit more finagling
+```{r message=FALSE, warning=FALSE}
+## read the html
+read_html("http://www.chakoteya.net/STDisco17/101.html") %>% 
+  ## parse nodes
+  html_nodes(
+    "body > div:nth-child(2) > center:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)") %>% 
+  ## parse text
+  html_text() %>% substr(1, 500)
+```
+
+```{r}
+## read the html
+(read_html("http://www.chakoteya.net/STDisco17/101.html") %>% 
+  ## parse nodes
+  html_nodes(
+    "body > div:nth-child(2) > center:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)") %>% 
+  ## parse text
+  html_text() %>% 
+    str_extract_all("\n.*:.*") %>%
+    lapply(function(x) {
+      gsub("\\.|,|!|\\?| $|^.*: |\n|\\[|\\]|\\(|\\)|\"", "", x)
+    }))[[1]][1:5] 
+```
+That's better.
+
+Much the same processes for Discovery scripts, but an additional step to parse the page with `html_nodes` and a little more cleanup
+```{r}
+ for (episode in seq(1, nrow(std))) {
+   script <-
+     read_html(std$`Episode Name`[episode]) %>% 
+     html_nodes(
+       "body > div:nth-child(2) > center:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)")
+   words <-
+     script[[1]] %>% html_text() %>% 
+    str_extract_all("\n.*:.*") %>%
+    lapply(function(x) {
+      gsub("\\.|,|!|\\?| $|^.*: |\n|\\[|\\]|\\(|\\)|\"", "", x)
+    }) %>% lapply(str_split, " ") %>%
+    unlist()
+   
+  std_n_words[length(std_n_words) + 1] <- 
+    words %>% unique() %>% length()
+  
+  std_names[length(std_names) + 1] <- 
+     paste0("DIS", "_", std$`Series/episode`[episode])
+  
+  std_word_length[[length(std_word_length) + 1]] <- 
+    words %>% unique() %>% lapply(nchar) %>% unlist()
+}
+```
+
+Merge the Discovery data with the previous table
+```{r}
+st_all_words <-
+  bind_rows(st_words, tibble(
+    "episode" = std_names,
+    "unique_words" = std_n_words,
+    "word_lengths" = std_word_length
+  )) %>% mutate(series = substr(episode, start = 1, stop = 3))
+dim(st_all_words)
+```
+
+At this point I can look at the unique words per episode per series
+```{r}
+st_all_words %>% ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = unique_words)) + geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "Unique words\n", fill = "",
+       title = "Unique words per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+Almost there, but the scripts are organized such that two-part episodes have one script file. I suspect those two-parters are being presented as outliers, so I'll go ahead and remove them and re-plot the data.
+```{r}
+st_all_words %>% group_by(series) %>% 
+  ## calculate interquartile range
+  mutate(IQR = IQR(unique_words),
+         ## calculate upper and lower quartile
+         q1 = quantile(unique_words,
+                       probs = 0.25),
+         q2 = quantile(unique_words,
+                       probs = 0.75),
+         ## calculate tukey's quartile bounds
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  ## filter data 
+  filter(unique_words >= qlow,
+         unique_words <= qup) %>% ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = unique_words)) + geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "Unique words\n",
+       title = "Unique words per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+Now to look at the mean word length per episode per series
+```{r}
+st_all_words %>% mutate(length_mean = lapply(word_lengths, mean, 
+                                             na.rm = TRUE) %>% unlist()) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = length_mean)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "Series", y = "Word length",
+       title = "Mean word length per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+It's not as messy as the previous chart, but it can still be cleaned up a little I think
+```{r}
+st_words_q <-
+  st_all_words %>% mutate(series = substr(episode, start = 1, stop = 3),
+                      iqr = lapply(word_lengths, IQR) %>% unlist(),
+                      q1_lengths = lapply(word_lengths, quantile, 0.25) %>% unlist(),
+                      q2_lengths = lapply(word_lengths, quantile, 0.75) %>% unlist(),
+                      qup = q2_lengths + (1.5 * iqr),
+                      qlow = q1_lengths -(1.5 * iqr))
+
+st_words_no_out <-
+st_words_q %>% 
+    mutate(filtered_lengths     = lapply(word_lengths,
+                                         function(x){
+                                             (x %>% unlist())[x %>% unlist() >= qlow & 
+                                                                  x %>% unlist() <= qup]}),
+           filtered_length_mean = lapply(filtered_lengths, mean, na.rm = TRUE) %>% 
+               unlist()) %>% suppressWarnings()
+
+st_words_no_out %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = filtered_length_mean)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "Word length\n", fill = "",
+       title = "Mean word length per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+# st_words_no_out %>% ggplot(aes(
+#   x = factor(series, 
+#              levels = c("TOS", "TAS", "TNG", "DS9", 
+#                         "VOY", "ENT", "DIS")), 
+#   y = filtered_length_mean)) + 
+#   geom_violin(aes(fill = series)) + 
+#   labs(x = "Series", y = "Word length", fill = "",
+#        title = "Mean word length per Star Trek episode") +
+#   theme_light()
+```
+
+Run [TreeTagger](https://cis.uni-muenchen.de/~schmid/tools/TreeTagger/) on Discovery scripts
+```{r message=FALSE, warning=FALSE}
+std_tags <- list()
+std_names <- c()
+
+for (episode in seq(1, nrow(std))) {
+  script <-
+    read_html(std$`Episode Name`[episode]) %>% html_nodes(
+      "body > div:nth-child(2) > center:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)"
+    )
+  script[[1]] %>% html_text() %>% 
+    str_extract_all("\n.*:.*") %>%
+    lapply(function(x) {
+      gsub("\\.|,|!|\\?| $|^.*: |\n|\\[|\\]|\\(|\\)|\"", "", x)
+    }) %>% lapply(str_split, " ") %>%
+    unlist() %>% write_lines("std_ep.txt")
+
+  std_tag <- treetag(
+    "std_ep.txt",
+    treetagger = "manual",
+    lang = "en",
+    TT.options = list(
+      path = "C:/TreeTagger/",
+      preset = "en"
+    )
+  ) 
+
+  std_names[length(std_names) + 1] <-
+    paste0("DIS", "_", std$`Series/episode`[episode])
+
+  std_tags[length(std_tags) + 1] <- std_tag
+}
+```
+
+And on pre-Discovery scripts
+```{r message=FALSE, warning=FALSE}
+st_tags <- list()
+st_names <- c()
+
+for(series in seq(1, length(st_lines))) {
+  for (episode in seq(1, length(st_lines[[series]]))) {
+    st_lines[[series]][[episode]] %>%
+    unlist(use.names = FALSE) %>%
+    lapply(function(x) {
+        gsub("\\.|,|!|\\?", "", x)
+    }) %>% unlist() %>%
+      write_lines("st_old.txt")
+    st_tag <-
+      treetag(
+        "st_old.txt",
+        treetagger = "manual",
+        lang = "en",
+        TT.options = list(
+          path = "C:/TreeTagger/",
+          preset = "en"
+        ))
+
+    st_names[length(st_names) + 1] <-
+      paste0(names(st_lines[series]), "_",
+             names(st_lines[[series]][episode]))
+
+    st_tags[length(st_tags) + 1] <- st_tag
+  }
+}
+```
+
+```{r}
+std_syl <- std_tags %>% lapply(hyphen)
+st_syl <- st_tags %>% lapply(hyphen)
+```
+
+Number of 2+ syllable words per episode
+```{r}
+two_syls <- c()
+for(ep in seq(1, length(st_syl))) {
+  two_syls[[length(two_syls) + 1]] <-
+    st_syl[[ep]]@hyphen[["syll"]][st_syl[[ep]]@hyphen[["syll"]] > 1] %>% length()
+}
+for(ep in seq(1, length(std_syl))) {
+  two_syls[[length(two_syls) + 1]] <-
+    std_syl[[ep]]@hyphen[["syll"]][std_syl[[ep]]@hyphen[["syll"]] > 1] %>% length()
+}
+```
+
+
+```{r}
+st_syl_tbl <-
+  tibble("name" = c(st_names, std_names),
+       "two_syllable" = two_syls)
+head(st_syl_tbl)
+```
+
+```{r}
+st_syl_tbl %>% mutate(series = substr(name, 1, 3)) %>%
+  group_by(series) %>%
+  mutate(IQR = IQR(two_syllable),
+         q1 = quantile(two_syllable,
+                       probs = 0.25),
+         q2 = quantile(two_syllable,
+                       probs = 0.75),
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  filter(two_syllable >= qlow,
+         two_syllable <= qup) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = two_syllable)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "Series", y = "2+ syllable words", fill = "",
+       title = "Number of 2+ syllable words per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_light()
+```
+
+####################################################################################################
+##### Sentence length
+####################################################################################################
+
+Run TreeTagger on Discovery scripts (punctuations kept)
+```{r message=FALSE, warning=FALSE}
+std_tags <- list()
+std_names <- c()
+
+for (episode in seq(1, nrow(std))) {
+  script <-
+    read_html(std$`Episode Name`[episode]) %>% html_nodes(
+      "body > div:nth-child(2) > center:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1)"
+    )
+  script[[1]] %>% html_text() %>% 
+    str_extract_all("\n.*:.*") %>%
+    lapply(function(x) {
+      gsub("^.*: |\n|\\[|\\]|\\(|\\)|\"", "", x)
+    }) %>% lapply(str_split, " ") %>%
+    unlist() %>% write_lines("std_ep.txt")
+
+  std_tag <- treetag(
+    "std_ep.txt",
+    treetagger = "manual",
+    lang = "en",
+    TT.options = list(
+      path = "C:/TreeTagger/",
+      preset = "en"
+    )
+  ) 
+
+  std_names[length(std_names) + 1] <-
+    paste0("DIS", "_", std$`Series/episode`[episode])
+
+  std_tags[length(std_tags) + 1] <- std_tag
+}
+```
+
+And on pre-Discovery scripts
+```{r message=FALSE, warning=FALSE}
+st_tags <- list()
+st_names <- c()
+
+for(series in seq(1, length(st_lines))) {
+  for (episode in seq(1, length(st_lines[[series]]))) {
+    st_lines[[series]][[episode]] %>%
+    unlist(use.names = FALSE) %>%
+      write_lines("st_old.txt")
+    st_tag <-
+      treetag(
+        "st_old.txt",
+        treetagger = "manual",
+        lang = "en",
+        TT.options = list(
+          path = "C:/TreeTagger/",
+          preset = "en"
+        ))
+
+    st_names[length(st_names) + 1] <-
+      paste0(names(st_lines[series]), "_",
+             names(st_lines[[series]][episode]))
+
+    st_tags[length(st_tags) + 1] <- st_tag
+  }
+}
+```
+
+Average sentence lengths
+```{r}
+sen_lens <- c()
+for(ep in seq(1, length(std_tags))) {
+  std_des <- describe(std_tags[[ep]])
+  sen_lens[length(sen_lens) + 1] <- std_des$avg.sentc.length
+}
+for(ep in seq(1, length(st_tags))) {
+  st_des <- describe(st_tags[[ep]])
+  sen_lens[length(sen_lens) + 1] <- st_des$avg.sentc.length
+}
+```
+
+```{r}
+st_sen_tbl <-
+  tibble("name" = c(st_names, std_names),
+       "mean_sentence_length" = sen_lens)
+head(st_sen_tbl)
+```
+
+```{r}
+st_sen_tbl %>% mutate(series = substr(name, 1, 3)) %>%
+  group_by(series) %>%
+  mutate(IQR = IQR(mean_sentence_length),
+         q1 = quantile(mean_sentence_length,
+                       probs = 0.25),
+         q2 = quantile(mean_sentence_length,
+                       probs = 0.75),
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  filter(mean_sentence_length >= qlow,
+         mean_sentence_length <= qup) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = mean_sentence_length)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "Mean sentence length\n", fill = "",
+       title = "Mean sentence length per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+###############################
+
+
+
+
+Average word lengths
+```{r}
+word_lens <- c()
+for(ep in seq(1, length(std_tags))) {
+  std_des <- describe(std_tags[[ep]])
+  word_lens[length(word_lens) + 1] <- std_des$avg.word.length
+}
+for(ep in seq(1, length(st_tags))) {
+  st_des <- describe(st_tags[[ep]])
+  word_lens[length(word_lens) + 1] <- st_des$avg.word.length
+}
+```
+
+```{r}
+st_word_tbl <-
+  tibble("name" = c(st_names, std_names),
+       "mean_word_length" = word_lens)
+head(st_word_tbl)
+```
+
+```{r}
+st_word_tbl %>% mutate(series = substr(name, 1, 3)) %>%
+  group_by(series) %>%
+  mutate(IQR = IQR(mean_word_length),
+         q1 = quantile(mean_word_length,
+                       probs = 0.25),
+         q2 = quantile(mean_word_length,
+                       probs = 0.75),
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  filter(mean_word_length >= qlow,
+         mean_word_length <= qup) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = mean_word_length)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "Mean word length\n", fill = "",
+       title = "Mean word length per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+Lexical diversity - the ratio of different unique word stems (types) to the total number of words
+```{r message=FALSE, warning=FALSE, include=FALSE}
+mtld <- c()
+for(ep in seq(1, length(std_tags))) {
+  std_lex <- std_tags[[ep]] %>% MTLD()
+  mtld[length(mtld) + 1] <- std_lex@MTLD[["MTLD"]]
+}
+for(ep in seq(1, length(st_tags))) {
+  st_lex <- st_tags[[ep]] %>% MTLD()
+  mtld[length(mtld) + 1] <- st_lex@MTLD[["MTLD"]]
+}
+```
+
+```{r}
+st_mtld_tbl <-
+  tibble("name" = c(std_names, st_names),
+       "mtld" = mtld)
+head(st_mtld_tbl)
+```
+
+```{r}
+st_mtld_tbl %>% mutate(series = substr(name, 1, 3)) %>%
+  group_by(series) %>%
+  mutate(IQR = IQR(mtld),
+         q1 = quantile(mtld,
+                       probs = 0.25),
+         q2 = quantile(mtld,
+                       probs = 0.75),
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  filter(mtld >= qlow,
+         mtld <= qup) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = mtld)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "mtld\n", fill = "",
+       title = "Measure of textual lexical diversity (MTLD) per Star Trek episode") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+Lexical diversity (very long running block)
+```{r message=FALSE, warning=FALSE, include=FALSE}
+mtldma <- c()
+for(ep in seq(1, length(std_tags))) {
+  std_lex <- std_tags[[ep]] %>% MTLD(MA = TRUE)
+  mtldma[length(mtldma) + 1] <- std_lex@MTLDMA[["MTLDMA"]]
+}
+for(ep in seq(1, length(st_tags))) {
+  st_lex <- st_tags[[ep]] %>% MTLD(MA = TRUE)
+  mtldma[length(mtldma) + 1] <- st_lex@MTLDMA[["MTLDMA"]]
+}
+```
+
+```{r}
+st_mtld_tbl <-
+  tibble("name" = c(std_names, st_names),
+       "mtldma" = mtldma)
+head(st_mtld_tbl)
+```
+
+```{r}
+st_mtld_tbl %>% mutate(series = substr(name, 1, 3)) %>%
+  group_by(series) %>%
+  mutate(IQR = IQR(mtldma),
+         q1 = quantile(mtldma,
+                       probs = 0.25),
+         q2 = quantile(mtldma,
+                       probs = 0.75),
+         qup = q2 + (1.5 * IQR),
+         qlow = q1 -(1.5 * IQR)) %>%
+  filter(mtldma >= qlow,
+         mtldma <= qup) %>%
+  ggplot(aes(
+  x = factor(series, 
+             levels = c("TOS", "TAS", "TNG", "DS9", 
+                        "VOY", "ENT", "DIS")), 
+  y = mtldma)) + 
+  geom_violin(aes(fill = series)) + 
+  labs(x = "\nSeries", y = "mtld\n", fill = "",
+       title = "Measure of textual lexical diversity (MTLD) per Star Trek episode",
+       subtitle = "Moving average method") +
+  guides(fill = FALSE) +
+  theme_solarized_dark(f_color = "lightblue", f_angle = 25)
+```
+
+
