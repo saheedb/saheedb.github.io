@@ -19,7 +19,7 @@ options(width = 300)
 https://en.wikipedia.org/wiki/Conway's_Game_of_Life    
   
   
-`pheatmap` is pretty intuitive and easy to use, but any tool can be used to create the plots
+`pheatmap` is pretty intuitive and easy to use, but several tools can be used to create the plots
 
 ```{r}
 library(pheatmap)
