@@ -47,6 +47,7 @@ step_fn <- function(s_0) {
       n <- sum(c(tl, t, tr, l, r, bl, b, br) > 0)
       ## permute based on Conway's three rules
       if (s_0[rw, cl] == 1) {
+        if (isTRUE(match(n, c(2, 3)) > 0))
         if (n %in% c(2, 3)) {
         } else {
           s_1[rw, cl] <- 0
@@ -107,18 +108,22 @@ I used ImageMagick (https://imagemagick.org/index.php), but many tools can be us
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xKoEEkFOTRA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>  
 
-### Alternate method to generate and save the images using arrays instead of nested loops:    
+### Alternate method to generate and save the images using arrays instead of nested loops (much faster):    
 
 ```{r eval=FALSE}
+library(pheatmap)
 gens <- 2000; cols <- 256; i_cell <- cols + 2; z_cell <- cols ^ 2 - (cols + 1)
 steps <- vector(mode = "list", length = gens)
+## main function
 step_fn <- function(s_0) {
   s_1 <- s_0
   for (cell in i_cell:z_cell) {
-    border_cells <- cell + c(1, 9:11, -1, -9:-11)
+    ## border cells specified by vector of positions
+    border_cells <- cell + c(1, (cols - 1):(cols + 1), -1, -(cols - 1):-(cols + 1))
     live_border  <- sum(s_0[border_cells] > 0)
+    ## check Conway's rules
     if (s_0[cell] == 1) {
-      if (live_border %in% c(2, 3)) {
+      if (isTRUE(match(live_border, c(2, 3)) > 0)) {
       } else {
         s_1[cell] <- 0
       }
@@ -130,10 +135,8 @@ step_fn <- function(s_0) {
   }
   return(s_1)
 }
-## initial state represented by an array instead of a matrix
 steps[[1]] <- rbinom(cols ^ 2, 1, 0.5)
 for (i in 2:gens) {
-  ## main function returns permuted array
   steps[[i]] <- step_fn(steps[[i - 1]])
 }
 for(mat in seq(1, length(steps))) {
