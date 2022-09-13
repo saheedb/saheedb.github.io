@@ -1749,24 +1749,53 @@ pre code {
                     col.names = c(&quot;visits&quot;, &quot;transactions&quot;, &quot;os&quot;, &quot;gender&quot;, &quot;revenue&quot;)) ## data does not have col names
 head(txn_dat)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NiwibmNvbCI6NX0sInJkZiI6Ikg0c0lBQUFBQUFBQUJuMVNzVTdETUJDOXBFbXFSTFFnZ1lBL1lHcWtGckVIZ2RnUUNKYXVKakd0UldwWGpsc1lHQkFqVXorQVAyQmdZK1p6MlBpRGxuTmlTeUdxNnVqa2QrL3VmTy9zM0p3UGo2TmhCQUF0OFBCcitRZ2hPTHZ1RDA0R0FKNkxub044cVBjbnpOcEZvSE02T2cxdEQyMGY3YkJNclBpRFd0d3hwZytDR3Q0cDQ5WEJMWFoxdXhHMlQza21CY3ZXdTJXaVBSRWdYT0V5b2VDQ1RraE8xM3JlNVNZTTBOVVZ5V3Z3ZS9UMThabThMVXI1eVdJTTlaVThmMWY3KzQ5aC9sMlp6OG1FRmthY2IyWE1XY0ZVWWJ3dEpRa3ZTS3FZNEpaemhVWEJpUEtNU2p1NHBIUEtaN1RSSlpUaU1iYWQ5TVc3TDVXV29Da256VWxoNVZneXlvZ2k4YjNFZXZTV2paSzJtRmJLd0xWUFh5OTJaSVBZbm5HdEpPdWw0eGwvNlBWMWc5cHYwREY3VU1OKzFkSmROZStKOGhIajlsbjhuTnpSM0RoZG5MZ2NPSjVLeHBXZEJOa2lWa0lSbXhlbElyZE1PUnNzL3dDeDg0K1c4Z0lBQUE9PSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["visits"],"name":[1],"type":["int"],"align":["right"]},{"label":["transactions"],"name":[2],"type":["int"],"align":["right"]},{"label":["os"],"name":[3],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[4],"type":["chr"],"align":["left"]},{"label":["revenue"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"20","2":"1","3":"iOS","4":"NA","5":"576.8668","_rn_":"1"},{"1":"22","2":"1","3":"iOS","4":"Female","5":"850.0000","_rn_":"2"},{"1":"24","2":"2","3":"iOS","4":"Female","5":"1050.0000","_rn_":"3"},{"1":"1","2":"0","3":"Android","4":"Male","5":"0.0000","_rn_":"4"},{"1":"13","2":"1","3":"Android","4":"Male","5":"460.0000","_rn_":"5"},{"1":"23","2":"2","3":"iOS","4":"Male","5":"1850.0000","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[6]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><strong>3. Calculate the following summative statistics: total transaction amount (revenue), mean number of visits, median revenue, standard deviation of revenue, most common gender. Exclude any cases where there is a missing value.</strong></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInRvdGFsIHJldmVudWUgPSAlZlwiLCBzdW0odHhuX2RhdCRyZXZlbnVlLCBuYS5ybSA9IFQpKVxuc3ByaW50ZihcIm1lYW4gdmlzaXRzID0gJWZcIiwgbWVhbih0eG5fZGF0JHZpc2l0cykpXG5zcHJpbnRmKFwibWVkaWFuIHJldmVudWUgPSAlZlwiLCBtZWRpYW4odHhuX2RhdCRyZXZlbnVlLCBuYS5ybSA9IFQpKVxuc3ByaW50ZihcInN0YW5kYXJkIGRldmlhdGlvbiByZXZlbnVlID0gJWZcIiwgc2QodHhuX2RhdCRyZXZlbnVlLCBuYS5ybSA9IFQpKVxuXG4jIyBjYWxjdWxhdGUgbW9kZVxuZ2VuZGVyX25vTkEgPC0gdHhuX2RhdCRnZW5kZXJbIWlzLm5hKHR4bl9kYXQkZ2VuZGVyKV0gIyMgcmVtb3ZlIE5Bc1xuZ2VuZGVycyA8LSB1bmlxdWUodHhuX2RhdCRnZW5kZXJbIWlzLm5hKHR4bl9kYXQkZ2VuZGVyKV0pICMjIGdldCB1bmlxdWUgZ2VuZGVyc1xuZ2VuZGVyX2NvdW50cyA8LSBzYXBwbHkoZ2VuZGVycywgZnVuY3Rpb24oeCkgeyBsZW5ndGgoZ3JlcCh4LCBnZW5kZXJfbm9OQSkpIH0pICMjIGNvdW50IHVuaXF1ZSBnZW5kZXJzXG5tb2RlIDwtIG5hbWVzKHdoaWNoKGdlbmRlcl9jb3VudHMgPT0gbWF4KGdlbmRlcl9jb3VudHMpKSkgIyMgZGV0ZXJtaW5lIG1vc3QgY29tbW9uIGdlbmRlclxuc3ByaW50ZihcIm1vc3QgY29tbW9uIGdlbmRlciA9ICVzXCIsIG1vZGUpXG5gYGAifQ== -->
-<pre class="r"><code>sprintf(&quot;total revenue = %f&quot;, sum(txn_dat$revenue, na.rm = T))
-sprintf(&quot;mean visits = %f&quot;, mean(txn_dat$visits))
-sprintf(&quot;median revenue = %f&quot;, median(txn_dat$revenue, na.rm = T))
-sprintf(&quot;standard deviation revenue = %f&quot;, sd(txn_dat$revenue, na.rm = T))
-
-## calculate mode
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInRvdGFsIHJldmVudWUgPSAlZlwiLCBzdW0odHhuX2RhdCRyZXZlbnVlLCBuYS5ybSA9IFQpKVxuYGBgIn0= -->
+<pre class="r"><code>sprintf(&quot;total revenue = %f&quot;, sum(txn_dat$revenue, na.rm = T))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwidG90YWwgcmV2ZW51ZSA9IDEwMzcyNTIzLjcyMzg4MVwiXG4ifQ== -->
+<pre><code>[1] &quot;total revenue = 10372523.723881&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcIm1lYW4gdmlzaXRzID0gJWZcIiwgbWVhbih0eG5fZGF0JHZpc2l0cykpXG5gYGAifQ== -->
+<pre class="r"><code>sprintf(&quot;mean visits = %f&quot;, mean(txn_dat$visits))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwibWVhbiB2aXNpdHMgPSAxMi40ODY3MzJcIlxuIn0= -->
+<pre><code>[1] &quot;mean visits = 12.486732&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcIm1lZGlhbiByZXZlbnVlID0gJWZcIiwgbWVkaWFuKHR4bl9kYXQkcmV2ZW51ZSwgbmEucm0gPSBUKSlcbmBgYCJ9 -->
+<pre class="r"><code>sprintf(&quot;median revenue = %f&quot;, median(txn_dat$revenue, na.rm = T))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwibWVkaWFuIHJldmVudWUgPSAzNDQuNjUxNjE0XCJcbiJ9 -->
+<pre><code>[1] &quot;median revenue = 344.651614&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInN0YW5kYXJkIGRldmlhdGlvbiByZXZlbnVlID0gJWZcIiwgc2QodHhuX2RhdCRyZXZlbnVlLCBuYS5ybSA9IFQpKVxuYGBgIn0= -->
+<pre class="r"><code>sprintf(&quot;standard deviation revenue = %f&quot;, sd(txn_dat$revenue, na.rm = T))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwic3RhbmRhcmQgZGV2aWF0aW9uIHJldmVudWUgPSA0MjUuOTg3MDc1XCJcbiJ9 -->
+<pre><code>[1] &quot;standard deviation revenue = 425.987075&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyMgY2FsY3VsYXRlIG1vZGVcbmdlbmRlcl9ub05BIDwtIHR4bl9kYXQkZ2VuZGVyWyFpcy5uYSh0eG5fZGF0JGdlbmRlcildICMjIHJlbW92ZSBOQXNcbmdlbmRlcnMgPC0gdW5pcXVlKHR4bl9kYXQkZ2VuZGVyWyFpcy5uYSh0eG5fZGF0JGdlbmRlcildKSAjIyBnZXQgdW5pcXVlIGdlbmRlcnNcbmdlbmRlcl9jb3VudHMgPC0gc2FwcGx5KGdlbmRlcnMsIGZ1bmN0aW9uKHgpIHsgbGVuZ3RoKGdyZXAoeCwgZ2VuZGVyX25vTkEpKSB9KSAjIyBjb3VudCB1bmlxdWUgZ2VuZGVyc1xubW9kZSA8LSBuYW1lcyh3aGljaChnZW5kZXJfY291bnRzID09IG1heChnZW5kZXJfY291bnRzKSkpICMjIGRldGVybWluZSBtb3N0IGNvbW1vbiBnZW5kZXJcbnNwcmludGYoXCJtb3N0IGNvbW1vbiBnZW5kZXIgPSAlc1wiLCBtb2RlKVxuYGBgIn0= -->
+<pre class="r"><code>## calculate mode
 gender_noNA &lt;- txn_dat$gender[!is.na(txn_dat$gender)] ## remove NAs
 genders &lt;- unique(txn_dat$gender[!is.na(txn_dat$gender)]) ## get unique genders
 gender_counts &lt;- sapply(genders, function(x) { length(grep(x, gender_noNA)) }) ## count unique genders
 mode &lt;- names(which(gender_counts == max(gender_counts))) ## determine most common gender
 sprintf(&quot;most common gender = %s&quot;, mode)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwibW9zdCBjb21tb24gZ2VuZGVyID0gTWFsZVwiXG4ifQ== -->
+<pre><code>[1] &quot;most common gender = Male&quot;</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><strong>4. Create a bar/column chart of gender (x-axis) versus revenue (y-axis). Omit missing values, i.e., where gender is NA or missing.</strong></p>
@@ -1783,6 +1812,9 @@ txn_dat[!is.na(txn_dat$gender),] %&gt;%  ## filter gender NAs
   geom_col() + labs(title = &quot;Total revenue by gender&quot;) ## plot
 </code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-plot-begin eyJoZWlnaHQiOjQzMi42MzI5LCJ3aWR0aCI6NzAwLCJzaXplX2JlaGF2aW9yIjowLCJjb25kaXRpb25zIjpbXX0= -->
+<p><img src="data:image/png;base64,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" /></p>
+<!-- rnb-plot-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><strong>5. What is the Pearson Moment of Correlation between number of visits and revenue? Comment on the correlation.</strong></p>
@@ -1791,6 +1823,9 @@ txn_dat[!is.na(txn_dat$gender),] %&gt;%  ## filter gender NAs
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29yKHR4bl9kYXQkdmlzaXRzLCB0eG5fZGF0JHJldmVudWUpXG5gYGAifQ== -->
 <pre class="r"><code>cor(txn_dat$visits, txn_dat$revenue)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNzM4ODM3NVxuIn0= -->
+<pre><code>[1] 0.7388375</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Revenue is highly correlated with the number of visits</p>
@@ -1801,6 +1836,10 @@ txn_dat[!is.na(txn_dat$gender),] %&gt;%  ## filter gender NAs
 <pre class="r"><code>## check each column for NAs
 apply(txn_dat, 2, function(x) { any(is.na(x)) })</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgdmlzaXRzIHRyYW5zYWN0aW9ucyAgICAgICAgICAgb3MgICAgICAgZ2VuZGVyICAgICAgcmV2ZW51ZSBcbiAgICAgICBGQUxTRSAgICAgICAgIFRSVUUgICAgICAgIEZBTFNFICAgICAgICAgVFJVRSAgICAgICAgRkFMU0UgXG4ifQ== -->
+<pre><code>      visits transactions           os       gender      revenue 
+       FALSE         TRUE        FALSE         TRUE        FALSE </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>NAs are found in the <code>transactions</code> and <code>gender</code> columns. Values can be imputed using the mean or median value for <code>transactions</code>. Alternatively, the mode can be used for imputing categorical values like gender</p>
@@ -1812,6 +1851,10 @@ apply(txn_dat, 2, function(x) { any(is.na(x)) })</code></pre>
          gender = replace_na(gender, mode)) %&gt;%  ## impute values
   apply(2, function(x) { any(is.na(x)) })        ## re-check each column for NAs</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgdmlzaXRzIHRyYW5zYWN0aW9ucyAgICAgICAgICAgb3MgICAgICAgZ2VuZGVyICAgICAgcmV2ZW51ZSBcbiAgICAgICBGQUxTRSAgICAgICAgRkFMU0UgICAgICAgIEZBTFNFICAgICAgICBGQUxTRSAgICAgICAgRkFMU0UgXG4ifQ== -->
+<pre><code>      visits transactions           os       gender      revenue 
+       FALSE        FALSE        FALSE        FALSE        FALSE </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><strong>7. Impute missing transaction and gender values. Use the mean for transaction (rounded to the nearest whole number) and the mode for gender.</strong></p>
@@ -1835,12 +1878,25 @@ txn_val &lt;- txn_dat[seq(2, nrow(txn_dat), 2), ]</code></pre>
 <p><strong>9. Calculate the mean revenue for the training and the validation data sets and compare them. Comment on the difference.</strong></p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInRyYWluaW5nIGRhdGEgbWVhbiByZXZlbnVlOiAlZlwiLCBtZWFuKHR4bl90cmFpbiRyZXZlbnVlKSlcbnNwcmludGYoXCJ2YWxpZGF0aW9uIGRhdGEgbWVhbiByZXZlbnVlOiAlZlwiLCBtZWFuKHR4bl92YWwkcmV2ZW51ZSkpXG5zcHJpbnRmKFwidGhlcmUgaXMgYSAlZiUlIGRpZmZlcmVuY2UgaW4gdGhlIG1lYW4gcmV2ZW51ZSBiZXR3ZWVudCB0aGUgdmFsaWRhdGlvbiBhbmQgdHJhaW5pbmcgZGF0YXNldHMuXCIsIFxuICAgICAgICAobWVhbih0eG5fdHJhaW4kcmV2ZW51ZSkgLSAgbWVhbih0eG5fdmFsJHJldmVudWUpKSAqIDEwMCAvIG1lYW4odHhuX3RyYWluJHJldmVudWUpKVxuYGBgIn0= -->
-<pre class="r"><code>sprintf(&quot;training data mean revenue: %f&quot;, mean(txn_train$revenue))
-sprintf(&quot;validation data mean revenue: %f&quot;, mean(txn_val$revenue))
-sprintf(&quot;there is a %f%% difference in the mean revenue betweent the validation and training datasets.&quot;, 
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInRyYWluaW5nIGRhdGEgbWVhbiByZXZlbnVlOiAlZlwiLCBtZWFuKHR4bl90cmFpbiRyZXZlbnVlKSlcbmBgYCJ9 -->
+<pre class="r"><code>sprintf(&quot;training data mean revenue: %f&quot;, mean(txn_train$revenue))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwidHJhaW5pbmcgZGF0YSBtZWFuIHJldmVudWU6IDQ2MC4yNjAwMTRcIlxuIn0= -->
+<pre><code>[1] &quot;training data mean revenue: 460.260014&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInZhbGlkYXRpb24gZGF0YSBtZWFuIHJldmVudWU6ICVmXCIsIG1lYW4odHhuX3ZhbCRyZXZlbnVlKSlcbmBgYCJ9 -->
+<pre class="r"><code>sprintf(&quot;validation data mean revenue: %f&quot;, mean(txn_val$revenue))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwidmFsaWRhdGlvbiBkYXRhIG1lYW4gcmV2ZW51ZTogNDQ5LjY0OTkzMVwiXG4ifQ== -->
+<pre><code>[1] &quot;validation data mean revenue: 449.649931&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ByaW50ZihcInRoZXJlIGlzIGEgJWYlJSBkaWZmZXJlbmNlIGluIHRoZSBtZWFuIHJldmVudWUgYmV0d2VlbnQgdGhlIHZhbGlkYXRpb24gYW5kIHRyYWluaW5nIGRhdGFzZXRzLlwiLCBcbiAgICAgICAgKG1lYW4odHhuX3RyYWluJHJldmVudWUpIC0gIG1lYW4odHhuX3ZhbCRyZXZlbnVlKSkgKiAxMDAgLyBtZWFuKHR4bl90cmFpbiRyZXZlbnVlKSlcbmBgYCJ9 -->
+<pre class="r"><code>sprintf(&quot;there is a %f%% difference in the mean revenue betweent the validation and training datasets.&quot;, 
         (mean(txn_train$revenue) -  mean(txn_val$revenue)) * 100 / mean(txn_train$revenue))</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwidGhlcmUgaXMgYSAyLjMwNTIzNyUgZGlmZmVyZW5jZSBpbiB0aGUgbWVhbiByZXZlbnVlIGJldHdlZW50IHRoZSB2YWxpZGF0aW9uIGFuZCB0cmFpbmluZyBkYXRhc2V0cy5cIlxuIn0= -->
+<pre><code>[1] &quot;there is a 2.305237% difference in the mean revenue betweent the validation and training datasets.&quot;</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p><strong>10. For many data mining and machine learning tasks, there are packages in R. Use the sample() function to split the data set, so that 60% is used for training and 20% is used for testing, and another 20% is used for validation. To ensure that your code is reproducible and that everyone gets the same result, use the number 77654 as your seed for the random number generator.</strong></p>
